@@ -31,4 +31,13 @@ public class SqlExpressionTests
         var ex = Assert.Throws<ArgumentException>(() => sqlExpression.Where(p => p.CategoryId.ToString("n2") == "1"));
         Assert.Contains("ToString-expression should not contain any argument.", ex.Message);
     }
+
+    [Fact]
+    public void ToStringParentheses_ReturnsSql()
+    {
+        var sqlExpression = new SqlExpression<Category>(new SqlServerSqlBuilder());
+        var sql = sqlExpression.Where(p => p.Id > 0 && (p.Id == 1 || p.Id < 0)).ToSql();
+        Assert.Equal(" where ([Categories].[Id] > @p1 and ([Categories].[Id] = @p2 or [Categories].[Id] < @p3))", sql);
+        Assert.Equal(sql, sqlExpression.ToString());
+    }
 }

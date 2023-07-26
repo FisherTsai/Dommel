@@ -480,6 +480,11 @@ public class SqlExpression<TEntity>
             else
             {
                 right = VisitExpression(expression.Right);
+
+                if (expression.Right.NodeType == ExpressionType.OrElse)
+                {
+                    right = $"({right})";
+                }
             }
         }
         else
